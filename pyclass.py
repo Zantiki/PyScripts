@@ -24,7 +24,7 @@ class Circle(object):
 
     @radius.setter
     def radius(self, radius):
-        self.diameter = radius * 0.2
+        self.diameter = radius * 2.0
 
     # object method
     def area(self):
@@ -44,7 +44,7 @@ class Circle(object):
 
     # Alternative constructor as a class method
     @classmethod
-    def from_bdd(cls, bbd):
+    def from_bbd(cls, bbd):
         """Construct a circle from a bbd"""
         radius = bbd / 2.0 / math.sqrt(2.0)
         # Returns a new class instance, since we cannot now what sub-class we are dealing with
@@ -60,10 +60,27 @@ class Tire(Circle):
         return Circle.perimeter(self) * 1.25
 
 
-def run_tutorial():
-    """Function for running tutorial"""
+def main():
+    """Run a test"""
     print("Circle version: {}".format(Circle.version))
-    circle = Circle(10)
+    circle = Circle(10.0)
+    tire = Tire(10.0)
     print("Your circle has a radius of {}".format(circle.radius))
+    print("Your circle has an diameter of {}".format(circle.diameter))
     print("Your circle has an area of {}".format(circle.area()))
+    print("Your tire has a perimeter of {}".format(tire.perimeter()))
+
+    circle_2 = Circle.from_bbd(5)
+    tire_2 = Tire.from_bbd(5)
+
+    print("Your bbd_circle has an area of {}".format(circle_2.area()))
+    print("Your bbd_circle has an diameter of {}".format(circle_2.diameter))
+    print("Your bbd_circle has an radius of {}".format(circle_2.radius))
+
+    print("Your bbd_tire has an perimeter of {}".format(tire_2.perimeter()))
+    print("Your bbd_circle has an perimeter of {}".format(circle_2.perimeter()))
+
+
+if __name__ == '__main__':
+    main()
 
