@@ -3,6 +3,7 @@
 def analyse(filename):
     """
     A method for analysing a text-file, see return-statement for more details
+    The file needs to be in the current working directory
     :param filename: the name of the file you wish analyse
     :return: A string with the data found
     """
@@ -64,7 +65,7 @@ def get_different(tot_words, word_dictionary):
 
 
 def get_diff_easy(word_dictionary):
-    # Find the average frequency of of every word
+    # Find the average frequency of every word
     avg_frequency = sum(word_dictionary.values()) / len(word_dictionary)
     total_words = len(word_dictionary)
     diff_count = 0
@@ -112,6 +113,7 @@ def get_avg_length_paragraph(paragraph_list):
 
 
 def main():
+    # Run analysis function on the testfile
     print(analyse("sorttest.txt"))
 
 
