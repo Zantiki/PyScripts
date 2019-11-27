@@ -1,4 +1,5 @@
 import filecmp
+import math
 import sys
 
 
@@ -33,19 +34,21 @@ def convert(input_file):
             if input_lines[i] == "*":
                 repetitions = get_address(input_lines[i+1])-get_address(input_lines[i-1])
                 data_length = 2 * (len(input_lines[i-1].split(" ")) - 1)
-                repetitions = int(repetitions / data_length)-1
-                new_adress = 0
+                # Make sure we always round the repetitions down
+                repetitions = math.floor(repetitions / data_length)-1
+                new_address = 0
                 for rep in range(repetitions):
-                    new_adress = get_address(input_lines[i-1])+((rep+1)*data_length)
+                    new_address = get_address(input_lines[i-1])+((rep+1)*data_length)
                     data_list = input_lines[i - 1].split(" ")
                     address_length = len(list(data_list[0]))
-                    data_list[0] = convert_decimal_hex(new_adress, address_length)
+                    data_list[0] = convert_decimal_hex(new_address, address_length)
                     new_line = " ".join(data_list)
                     output_lines.append(new_line)
-                if new_adress+data_length != get_address(input_lines[i+1]):
+                if new_address+data_length != get_address(input_lines[i+1]):
                     data_list = input_lines[i - 1].split(" ")
                     address_length = len(list(data_list[0]))
-                    output_lines.append(handle_odd(new_adress,
+                    output_lines.append(handle_odd(input_lines[i-1],
+                                                   new_address,
                                                    get_address(input_lines[i-1]),
                                                    get_address(input_lines[i+1]),
                                                    data_length, address_length))
@@ -74,8 +77,9 @@ def get_address(tot_string):
     return convert_hex_decimal(tot_string.split(" ")[0])
 
 
-def handle_odd(previous_adress, from_address, to_address, data_length, address_length):
+def handle_odd(dataline, previous_address, from_address, to_address, data_length, address_length):
     remainder = (from_address-to_address) % data_length
+    data_to_append = list(dataline)
 
     while remainder % 4 != 0:
         remainder += 1
@@ -83,13 +87,16 @@ def handle_odd(previous_adress, from_address, to_address, data_length, address_l
     div_int = remainder / 4
     line_data = []
 
+    i = address_length
     while len(line_data) < remainder + div_int:
-        if len(line_data) % 5 == 0:
-            line_data.append(" ")
-        line_data.append("0")
+        line_data.append(data_to_append[i])
+        i += 1
+    while len(line_data)+address_length < len(data_to_append):
+        line_data.append(" ")
+
     data_line = "".join(line_data)
-    print(convert_decimal_hex(previous_adress + data_length, address_length)+data_line)
-    return convert_decimal_hex(previous_adress + data_length, address_length)+data_line
+    print(convert_decimal_hex(previous_address + data_length, address_length)+data_line)
+    return convert_decimal_hex(previous_address + data_length, address_length)+data_line
 
 def convert_hex_decimal(hex_string):
     return int(hex_string, 16)
