@@ -81,16 +81,23 @@ def handle_odd(dataline, previous_address, from_address, to_address, data_length
     remainder = (from_address-to_address) % data_length
     data_to_append = list(dataline)
 
-    while remainder % 4 != 0:
-        remainder += 1
+    loop_iterations = remainder
+    while loop_iterations % 4 != 0:
+        loop_iterations += 1
 
     div_int = remainder / 4
     line_data = []
 
     i = address_length
-    while len(line_data) < remainder + div_int:
-        line_data.append(data_to_append[i])
-        i += 1
+    while len(line_data) < loop_iterations + div_int:
+        if i > remainder + div_int:
+            if len(line_data) % 5 == 0:
+                line_data.append(" ")
+            else:
+                line_data.append("0")
+        else:
+            line_data.append(data_to_append[i])
+            i += 1
     while len(line_data)+address_length < len(data_to_append):
         line_data.append(" ")
 
